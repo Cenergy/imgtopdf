@@ -3,6 +3,7 @@ import tkinter as tk
 import tkinter.filedialog
 # -*- coding:=utf8 -*- 
 import io
+import re
 import sys
 import os
 import glob 
@@ -66,15 +67,16 @@ def topdf(path,recursion=None,pictureType=None,sizeMode=None,width=None,height=N
         picName=var2.get()
         for i in pictureType:
             hellopic=glob.glob(os.path.join(path, '*.'+i))
-            
-            for j in hellopic:
-                file_path = os.path.split(j) #分割出目录与文件
-                file_path1 = file_path[0].split('.')
-                lists = file_path[1].split('.') #分割出文件与文件扩展名  
-                file_ext = lists[0] #取出后缀名(列表切片操作)
-                if  picName=='':
-                    filelist.extend(hellopic)
-                else:
+            hellopic.sort(key=lambda x: len(x))
+
+            if picName=='':
+                filelist.extend(hellopic)
+            else:
+                for j in hellopic:
+                    file_path = os.path.split(j) #分割出目录与文件
+                    file_path1 = file_path[0].split('.')
+                    lists = file_path[1].split('.') #分割出文件与文件扩展名  
+                    file_ext = lists[0] #取出后缀名(列表切片操作)
                     if picName in file_ext:
                         filelist.append(j)
 
@@ -92,13 +94,14 @@ def topdf(path,recursion=None,pictureType=None,sizeMode=None,width=None,height=N
         maxh = 999999
         for i in filelist:
             im = Image.open(i)
+            print(i)
             if maxw > im.size[0]:
                 maxw = im.size[0]
             if maxh > im.size[1]:
                 maxh = im.size[1]
     else:
         if width == None or height == None:
-            raise Exception("no width or height provid")
+            raise Exception("没有提供宽度或者高度")
         maxw = width
         maxh = height
 
@@ -123,4 +126,6 @@ def topdf(path,recursion=None,pictureType=None,sizeMode=None,width=None,height=N
 
 tk.Button(window,text='ImgToPdf',width=50,command=imgtopdf).place(x=20,y=200)
 window.mainloop()
+
+
 

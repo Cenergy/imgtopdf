@@ -6,9 +6,7 @@ xlsxFiles = (fn for fn in os.listdir('.') if fn.endswith('.xlsx'))
 
 
 sSourceFile = "./templates/templatexls.xlsx"
-wb = openpyxl.load_workbook(sSourceFile)
-copy_sheet1 = wb.copy_worksheet(wb.worksheets[0])
-print(copy_sheet1)
+wbCopy = openpyxl.load_workbook(sSourceFile)
 
 
 for xlsxFile in xlsxFiles:
@@ -42,6 +40,7 @@ for xlsxFile in xlsxFiles:
         ws.evenFooter.right.text = "日期:2019-5      第 &[Page]-2 页    共 &N-2 页"
 
     ws1 = wb.create_sheet("Mysheet", 0)
+    copy_sheet1 = wb.copy_worksheet(wbCopy.worksheets[0])
     ws1['A3'] = "封面"
 
     wb.save('new_'+xlsxFile)

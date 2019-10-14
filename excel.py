@@ -2,6 +2,7 @@
 import os
 import openpyxl
 from openpyxl.worksheet.header_footer import _HeaderFooterPart
+import pandas as pd
 
 from openpyxl.drawing.image import Image
 
@@ -44,6 +45,47 @@ for xlsxFile in xlsxFiles:
         ws.evenFooter.right.text = "日期:2019-5      第 &[Page]-2 页    共 &N-2 页"
 
     ws0 = wb.get_sheet_by_name('目录')
+    dataFrame = pd.read_excel(xlsxFile, sheet_name='目录')
+
+    print(ws0.max_row)
+    value12 = ws0['A12'].value.split('…………………………………………………')
+    value13 = ws0['A13'].value.split('…………………………………………………')
+    value14 = ws0['A14'].value.split('…………………………………………………')
+    value15 = ws0['A15'].value.split('…………………………………………………')
+    value16 = ws0['A16'].value.split('…………………………………………………')
+    value17 = ws0['A17'].value.split('…………………………………………………')
+    value18 = ws0['A18'].value.split('…………………………………………………')
+    value19 = ws0['A19'].value.split('…………………………………………………')
+    ws00 = wb.create_sheet("封面0", 0)
+
+    varStr = '………………………………………………………………………………………………………………'
+
+    ws00['B4'].value = varStr
+    ws00['A4'].value = value12[0]
+    ws00['C4'].value = value12[1]
+    ws00['B5'].value = varStr
+    ws00['A5'].value = value13[0]
+    ws00['C5'].value = value13[1]
+    ws00['B6'].value = varStr
+    ws00['A6'].value = value14[0]
+    ws00['C6'].value = value14[1]
+    ws00['B7'].value = varStr
+    ws00['A7'].value = value15[0]
+    ws00['C7'].value = value15[1]
+    ws00['B8'].value = varStr
+    ws00['A8'].value = value16[0]
+    ws00['C8'].value = value16[1]
+    ws00['B9'].value = varStr
+    ws00['A9'].value = value17[0]
+    ws00['C9'].value = value17[1]
+    ws00['B10'].value = varStr
+    ws00['A10'].value = value18[0]
+    ws00['C10'].value = value18[1]
+    ws00['B11'].value = varStr
+    ws00['A11'].value = value19[0]
+    ws00['C11'].value = value19[1]
+
+    print(value12, "=============")
 
     ws1 = wb.create_sheet("封面", 0)
 

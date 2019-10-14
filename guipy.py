@@ -96,6 +96,6 @@ def batchConvert():
     convertCore(xlsxFiles, filePath)
 
 
-tk.Button(window, text='开始执行', width=50,
+tk.Button(window, text='开始脚注', width=50,
           command=batchConvert).place(x=10, y=260)
 window.mainloop()

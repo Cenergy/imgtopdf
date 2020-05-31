@@ -66,6 +66,11 @@ def convertCore(filePath, name):
     for sheetname in wb.sheetnames:
         ws = wb[sheetname]
         if sheetname != '目录':
+            dataFrame = pd.read_excel(filePath, sheet_name=sheetname)
+            dataLen=len(dataFrame)+1
+            printArea='A1:T'+str(dataLen)
+            ws.print_area = printArea
+
             ws.print_title_rows = '1:4'
             ws.row_dimensions[4].height = 36
             ws.HeaderFooter.differentFirst = False
@@ -77,13 +82,13 @@ def convertCore(filePath, name):
             ws.oddFooter.left.size = 8
             ws.oddFooter.center.size = 8
             ws.oddFooter.right.font = "宋体"
-            ws.oddFooter.right.text = "第 &[Page]-2 页"
+            ws.oddFooter.right.text = "第 &[Page] 页"
             ws.evenFooter.left = _HeaderFooterPart(
                 '制表：曹开升                            校核：高  进                             审核：吴贵年                            项目负责人：楼少华')
             ws.evenFooter.right.size = 8
             ws.evenFooter.left.size = 8
             ws.evenFooter.right.font = "宋体"
-            ws.evenFooter.right.text = "第 &[Page]-2 页"
+            ws.evenFooter.right.text = "第 &[Page] 页"
 
             # ws.page_setup.fitToHeight = True
 
@@ -93,9 +98,13 @@ def convertCore(filePath, name):
             # ws.merge_cells("G2:N2")
 
             ws.cell(2, 7).value = name
+
+
         else:
             ws.cell(4, 1).value = name
             ws.cell(12, 1).value = name
+            printArea='A1:Q22'
+            ws.print_area = printArea
                 
 
     wb.save(filePath)

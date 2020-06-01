@@ -6,20 +6,8 @@ import glob
 
 import pandas as pd
 import openpyxl
-import xlrd
+
 from openpyxl.worksheet.header_footer import _HeaderFooterPart
-from openpyxl.utils import get_column_letter
-from openpyxl.drawing.image import Image
-from openpyxl.styles import Color, Font, Alignment
-
-
-alignObj1 = Alignment(horizontal='left',
-                      vertical='center', wrapText=True)
-fontObj1 = Font(name=u'楷体_GB2312', bold=True, italic=False, size=24)
-fontObj2 = Font(name=u'楷体_GB2312', bold=True, italic=False, size=30)
-fontObj3 = Font(name=u'楷体', bold=True, italic=False, size=18)
-fontObj4 = Font(name=u'宋体', bold=True, italic=False, size=26)
-fontObj5 = Font(name=u'宋体', bold=False, italic=False, size=15)
 
 
 window = tk.Tk()
@@ -40,14 +28,7 @@ def chooseFile():
     statusStr.set('')
 
 
-def constructorExcel(ws, startNum, value1, value2, value3):
-    ws['A'+str(startNum)].value = value1
-    ws['A'+str(startNum)].font = fontObj5
-    ws['B'+str(startNum)].value = value2
-    ws['B'+str(startNum)].font = fontObj5
-    ws['C'+str(startNum)].value = value3
-    ws['C'+str(startNum)].font = fontObj5
-    ws.row_dimensions[startNum].height = 38.45
+
 
 
 tk.Button(window, text='选择文件夹', command=chooseFile).place(x=10, y=20)
@@ -65,7 +46,8 @@ def convertCore(filePath, name):
     # fixColNum = var2.get()
     for sheetname in wb.sheetnames:
         ws = wb[sheetname]
-        if sheetname != '目录':
+        firstSheetName=wb.sheetnames[0]
+        if sheetname != firstSheetName:
             dataFrame = pd.read_excel(filePath, sheet_name=sheetname)
             dataLen=len(dataFrame)+1
             printArea='A1:T'+str(dataLen)
@@ -104,11 +86,12 @@ def convertCore(filePath, name):
             ws.cell(4, 1).value = name
             ws.cell(12, 1).value = name
             printArea='A1:Q22'
+            ws.row_dimensions[9].height=22.5
             ws.print_area = printArea
                 
 
     wb.save(filePath)
-    statusStr.set('转换完毕！')
+    
 
 
 def bianLi(rootDir):
@@ -130,14 +113,15 @@ def batchConvert():
         return
 
     xlsx_file_number = glob.glob(pathname=filePath+'/' + r'*.xlsx')
-    print(len(xlsx_file_number))
+
 
     if len(xlsx_file_number) == 0:
         statusStr.set('不存在.xlsx的文件')
         return
     bianLi(filePath)
+    statusStr.set('恭喜，转换完毕！')
 
 
-tk.Button(window, text='开始脚注', width=50,
+tk.Button(window, text='开始', width=50,
           command=batchConvert).place(x=10, y=260)
 window.mainloop()

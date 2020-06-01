@@ -1,1 +1,5 @@
 templates/~$new_123.xlsx
+build/
+dist/
+*.pyc
+*.spec

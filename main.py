@@ -65,12 +65,14 @@ def convertCore(filePath, name):
             ws.oddFooter.center.size = 8
             ws.oddFooter.right.font = "宋体"
             ws.oddFooter.right.text = "第 &[Page] 页"
+            ws.oddFooter.center.text = ""
             ws.evenFooter.left = _HeaderFooterPart(
                 '制表：曹开升                            校核：高  进                             审核：吴贵年                            项目负责人：楼少华')
             ws.evenFooter.right.size = 8
             ws.evenFooter.left.size = 8
             ws.evenFooter.right.font = "宋体"
             ws.evenFooter.right.text = "第 &[Page] 页"
+            ws.evenFooter.center.text = ""
 
             # ws.page_setup.fitToHeight = True
 

@@ -57,6 +57,9 @@ def convertCore(filePath, name):
             ws.row_dimensions[4].height = 36
             ws.HeaderFooter.differentFirst = False
             ws.HeaderFooter.differentOddEven = True
+            ws.oddHeader.right.text = ''
+            ws.oddHeader.center.text = ''
+            ws.oddHeader.left.text = ''
             ws.oddFooter.left = _HeaderFooterPart(
                 '制表：曹开升                            校核：高  进                             审核：吴贵年                            项目负责人：楼少华')
 

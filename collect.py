@@ -1,29 +1,40 @@
+# pip install python_docx
 # conding=utf-8
 import tkinter as tk
 import tkinter.filedialog
 import os
 import glob
 
-import pandas as pd
-import openpyxl
 
-import docx
+from pandas import DataFrame
 import re
 from docx import Document
 
-from openpyxl.worksheet.header_footer import _HeaderFooterPart
+
 
 
 window = tk.Tk()
-window.title("auto excel")
+window.title("批量获取docx中的文字")
 window.geometry('450x360')
 var1 = tk.StringVar()
+res=[]
+
 fileName = tk.Entry(window, textvariable=var1, width=40).place(x=100, y=20)
 
 statusStr = tk.StringVar()    # 将label标签的内容设置为字符类型，用var来接收函数的传出内容用以显示在标签上
 l = tk.Label(window, textvariable=statusStr, bg='green',
              fg='white', font=('Arial', 12), width=30, height=2)
 l.pack(side='bottom')
+
+tk.Label(window,text='开始截取的文字').place(x=10,y=80)
+var2=tk.StringVar()
+var2.set('原有竣工图工程')
+tk.Entry(window,textvariable=var2,width=40).place(x=100,y=80)
+
+tk.Label(window,text='结束截取的文字').place(x=10,y=140)
+var3=tk.StringVar()
+var3.set('实际工程量')
+fileName=tk.Entry(window,textvariable=var3,width=40).place(x=100,y=140)
 
 
 def chooseFile():
@@ -37,37 +48,35 @@ def chooseFile():
 
 tk.Button(window, text='选择文件夹', command=chooseFile).place(x=10, y=20)
 
-# tk.Label(window, text='固定的行数').place(x=10, y=80)
-# var2 = tk.StringVar()
-# var2.set('4')
-# tk.Entry(window, textvariable=var2, width=40).place(x=100, y=80)
 
 
 def read_docx(file_name):
-    doc = docx.Document(file_name)
+    doc = Document(file_name)
     content = '\n'.join([para.text for para in doc.paragraphs])
     return content
 
-def convertCore(filePath, name):
+def convertCore(filePath, name,startText,endText):
 
     text=read_docx(filePath)
 
-    regText="原有竣工图工程(.*)实际工程量"
+    regText="{}(.*){}".format(startText,endText)
     targetText=re.findall(regText, text,re.S)
     
     return {"name":name,"value":targetText[0]}
     
 
-res=[]
+
 
 def bianLi(rootDir):
+    startText=var2.get()
+    endText=var3.get()
     for root, dirs, files in os.walk(rootDir):
         for file in files:
             filePath = os.path.join(root, file)
             if filePath.endswith('.docx'):
                 try:
                     tempName = os.path.splitext(file)[0]
-                    result=convertCore(filePath, tempName)
+                    result=convertCore(filePath, tempName,startText,endText)
                     res.append(result)
                 except:
                     pass
@@ -90,7 +99,7 @@ def batchConvert():
         statusStr.set('不存在.docx的文件')
         return
     bianLi(filePath)
-    dataFrame=pd.DataFrame(res)
+    dataFrame=DataFrame(res)
     dataFrame.to_excel(filePath+'/'+'result.xlsx')
     statusStr.set('恭喜，转换完毕！')
 

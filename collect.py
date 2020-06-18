@@ -55,14 +55,34 @@ def read_docx(file_name):
     content = '\n'.join([para.text for para in doc.paragraphs])
     return content
 
+def returnValue(targetList):
+    if targetList==None:
+        return float(0)
+    if len(targetList):
+        return float(targetList[0])
+    return float(0)
+    
+
 def convertCore(filePath, name,startText,endText):
 
     text=read_docx(filePath)
 
     regText="{}(.*){}".format(startText,endText)
     targetText=re.findall(regText, text,re.S)
-    
-    return {"name":name,"value":targetText[0]}
+    if len(targetText):
+        pipeLengthReg=r"{}(-?\d+\.?\d*e?-?\d*?)".format("排水管道长度共计")
+        rainReg=r"{}(-?\d+\.?\d*e?-?\d*?)".format("雨水管道")
+        pollutionReg=r"{}(-?\d+\.?\d*e?-?\d*?)".format("污水管道")
+        stationReg=r"{}(-?\d+\.?\d*e?-?\d*?)".format("雨水篦等连接管")
+        wcReg=r"{}(-?\d+\.?\d*e?-?\d*?)".format("化粪池等连接管")
+        allLength=re.findall(pipeLengthReg, targetText[0],re.S)
+        rainLength=re.findall(rainReg, targetText[0],re.S)
+        pollutionLength=re.findall(pollutionReg, targetText[0],re.S)
+        stationLength=re.findall(stationReg, targetText[0],re.S)
+        wcLength=re.findall(wcReg, targetText[0],re.S)
+        nameReg=r'[(](.*?)[)]'
+        realName=re.findall(nameReg, name,re.S)
+        return {"名称":realName[1],"name":name,"排水管道长度共计":returnValue(allLength),"雨水管道":returnValue(rainLength),"污水管道":returnValue(pollutionLength),"雨水篦等连接管":returnValue(stationLength),"化粪池等连接管":returnValue(wcLength),"原始值":targetText[0]}
     
 
 

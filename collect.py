@@ -28,7 +28,7 @@ l.pack(side='bottom')
 
 tk.Label(window,text='开始截取的文字').place(x=10,y=80)
 var2=tk.StringVar()
-var2.set('原有竣工图工程')
+var2.set('排水管网涉及工程量：')
 tk.Entry(window,textvariable=var2,width=40).place(x=100,y=80)
 
 tk.Label(window,text='结束截取的文字').place(x=10,y=140)
@@ -56,17 +56,24 @@ def read_docx(file_name):
     return content
 
 def returnValue(targetList):
-    if targetList==None:
+    if targetList==[]:
         return float(0)
     if len(targetList):
         return float(targetList[0])
     return float(0)
+def returnValidName(targetName,cursor):
+    if targetName==None:
+        return ''
+    if len(targetName)>=cursor:
+        return targetName[cursor-1]
+    return targetName[-1]
+    
+
     
 
 def convertCore(filePath, name,startText,endText):
 
     text=read_docx(filePath)
-
     regText="{}(.*){}".format(startText,endText)
     targetText=re.findall(regText, text,re.S)
     if len(targetText):
@@ -80,10 +87,11 @@ def convertCore(filePath, name,startText,endText):
         pollutionLength=re.findall(pollutionReg, targetText[0],re.S)
         stationLength=re.findall(stationReg, targetText[0],re.S)
         wcLength=re.findall(wcReg, targetText[0],re.S)
-        nameReg=r'[(](.*?)[)]'
+        nameReg=r'[(|（](.*?)[)|）]'
         realName=re.findall(nameReg, name,re.S)
-        return {"名称":realName[1],"name":name,"排水管道长度共计":returnValue(allLength),"雨水管道":returnValue(rainLength),"污水管道":returnValue(pollutionLength),"雨水篦等连接管":returnValue(stationLength),"化粪池等连接管":returnValue(wcLength),"原始值":targetText[0]}
-    
+        res={"名称":returnValidName(realName,2),"name":name,"排水管道长度共计":returnValue(allLength),"雨水管道":returnValue(rainLength),"污水管道":returnValue(pollutionLength),"雨水篦等连接管":returnValue(stationLength),"化粪池等连接管":returnValue(wcLength),"原始值":targetText[0]}
+        return res
+    return {"name":name,"排水管道长度共计":0,"雨水管道":0,"污水管道":0,"雨水篦等连接管":0,"化粪池等连接管":0,"原始值":""}
 
 
 
